@@ -2,5 +2,5 @@
 CREATE TABLE "team" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
-    "amount" INTEGER NOT NULL
+    "money" INTEGER NOT NULL
 );
