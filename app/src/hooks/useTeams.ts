@@ -1,31 +1,46 @@
 import { useEffect, useState } from "react";
 import { Team } from "../types";
 
-import { io } from "socket.io-client";
+import { socket } from "../socket";
 
-export default function useTeams() {
-    const [teams, setTeams] = useState<Team[]>([
-        { id: 1, name: '一小', money: 3000 },
-        { id: 2, name: '二小', money: 3000 },
-        { id: 3, name: '三小', money: 3100 },
-        { id: 4, name: '四小', money: 3003 },
-        { id: 5, name: '五小', money: 3500 },
-    ]);
+export default function useTeams(diffTimeout: number) {
+    const [teams, setTeams] = useState<Team[]>([]);
+
+    const [diff, setDiff] = useState<{ [key: number]: { amount: number, at: Date } }>({});
 
     useEffect(() => {
         fetch('http://localhost:3001/api').then((resp) => resp.json()).then((v) => {
             setTeams(v);
         });
+    }, []);
 
-        const socket = io('localhost:3001');
+    useEffect(() => {
         socket.on('connect', () => {
             console.log('connected');
-        })
-
-        socket.on('team_updated', (data) => { 
-            console.log(data);
         });
-    }, []);
+
+        socket.on('team_updated', (team: Team) => {
+            const oldTeam = teams.find((v) => v.id === team.id);
+            if (oldTeam) {
+                const newDiff = {
+                    ...diff,
+                    [team.id]: {
+                        amount: team.money - oldTeam.money,
+                        at: new Date(),
+                    }
+                };
+
+                setDiff(Object.fromEntries(Object.entries(newDiff).filter(([k, v]) => (Date.now() - v.at.getTime()) > diffTimeout)));
+            }
+
+            setTeams(teams.map((v) => v.id === team.id ? team : v));
+        });
+
+        return () => {
+            socket.off('connect');
+            socket.off('team_updated');
+        }
+    }, [teams, diff, diffTimeout]);
 
     const debugUpdate = () => {
         const team = Math.floor(Math.random() * teams.length);
@@ -34,5 +49,5 @@ export default function useTeams() {
         setTeams(teams.map((v, i) => i === team ? { ...v, money: v.money + moneyDiff } : v));
     };
 
-    return { teams, debugUpdate };
+    return { teams, debugUpdate, diff };
 }
