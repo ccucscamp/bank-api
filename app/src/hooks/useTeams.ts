@@ -9,7 +9,7 @@ export default function useTeams(diffTimeout: number) {
     const [diff, setDiff] = useState<{ [key: number]: { amount: number, at: Date } }>({});
 
     useEffect(() => {
-        fetch('http://localhost:3001/api').then((resp) => resp.json()).then((v) => {
+        fetch(`${process.env.REACT_APP_BACKEND}/api`).then((resp) => resp.json()).then((v) => {
             setTeams(v);
         });
     }, []);
@@ -30,7 +30,9 @@ export default function useTeams(diffTimeout: number) {
                     }
                 };
 
-                setDiff(Object.fromEntries(Object.entries(newDiff).filter(([k, v]) => (Date.now() - v.at.getTime()) > diffTimeout)));
+                setDiff(Object.fromEntries(
+                    Object.entries(newDiff).filter(([k, v]) => (Date.now() - v.at.getTime()) < diffTimeout)
+                ));
             }
 
             setTeams(teams.map((v) => v.id === team.id ? team : v));

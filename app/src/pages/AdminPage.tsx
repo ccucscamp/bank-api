@@ -72,7 +72,7 @@ export default function AdminPage() {
             });
 
             setLoading(true);
-            fetch('http://localhost:3001/api', {
+            fetch(`${process.env.REACT_APP_BACKEND}/api`, {
                 method: 'POST',
                 body,
                 headers: {
