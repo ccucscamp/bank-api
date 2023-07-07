@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { join } from 'path';
+import { ChatGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { join } from 'path';
     EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ChatGateway],
 })
 export class AppModule { }
