@@ -7,7 +7,7 @@ import useTeams from '../hooks/useTeams';
 function App() {
   const { teams, diff } = useTeams(5000);
 
-  Object.entries(diff)
+  // Object.entries(diff)
 
   return (
     <Container marginTop={10}>
@@ -28,7 +28,7 @@ function App() {
           </Flex>
         </Box>
       </Flex>
-    </Container >
+    </Container>
   );
 }
 

@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import './index.css';
 import App from './pages/App';
 import reportWebVitals from './reportWebVitals';
 import theme from './theme';
+import AdminPage from './pages/AdminPage';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,7 +16,12 @@ root.render(
   <React.StrictMode>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <ChakraProvider theme={theme}>
-      <App />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/admin" element={<AdminPage />} />
+        </Routes>
+      </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>
 );
