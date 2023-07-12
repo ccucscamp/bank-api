@@ -23,7 +23,7 @@ export class ChatGateway {
     }
 
     @SubscribeMessage('update_disp_mode')
-    updateDispMode(@MessageBody('new_mode') newMode: string) {
+    updateDispMode(@MessageBody() newMode: string) {
         this.server.emit('display_mode_updated', newMode);
     }
 }
