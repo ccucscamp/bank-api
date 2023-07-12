@@ -19,11 +19,11 @@ export class ChatGateway {
 
     @SubscribeMessage('lottery_run')
     lotteryRun() {
-        this.server.emit('lottery_run');
+        this.server.send('lottery_run');
     }
 
     @SubscribeMessage('update_disp_mode')
     updateDispMode(@MessageBody() newMode: string) {
-        this.server.emit('display_mode_updated', newMode);
+        this.server.send('display_mode_updated', newMode);
     }
 }
