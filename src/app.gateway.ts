@@ -1,5 +1,5 @@
 import { OnEvent } from "@nestjs/event-emitter";
-import { WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server } from "socket.io";
 
 @WebSocketGateway({
@@ -15,5 +15,15 @@ export class ChatGateway {
     @OnEvent('team_updated')
     handleUpdate(data: any) {
         this.server.emit('team_updated', data);
+    }
+
+    @SubscribeMessage('lottery_run')
+    lotteryRun() {
+        this.server.emit('lottery_run');
+    }
+
+    @SubscribeMessage('update_disp_mode')
+    updateDispMode(@MessageBody('new_mode') newMode: string) {
+        this.server.emit('display_mode_updated', newMode);
     }
 }
